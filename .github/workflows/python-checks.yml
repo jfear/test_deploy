@@ -12,7 +12,7 @@ on:
 jobs:
   build_docs:
     runs-on: ubuntu-latest
-    if: "startsWith(github.even.head_commit.message, 'docs')"
+    if: "startsWith(github.event.head_commit.message, 'docs')"
 
     steps:
     - uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
 
   build_and_test:
     runs-on: ubuntu-latest
-    if: "! startsWith(github.even.head_commit.message, 'docs')"
+    if: "! startsWith(github.event.head_commit.message, 'docs')"
     strategy:
       matrix:
         python-version: [3.8]
