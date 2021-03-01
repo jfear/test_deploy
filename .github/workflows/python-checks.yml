@@ -10,9 +10,37 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  build_docs:
     runs-on: ubuntu-latest
+    if: "startsWith(github.even.head_commit.message, 'docs')"
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip poetry
+        poetry install
+
+    - name: Build Docs
+      run: |
+        poetry shell
+        make -C docs html
+
+    - name: Deploy gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build/html
+
+  build_and_test:
+    runs-on: ubuntu-latest
+    if: "! startsWith(github.even.head_commit.message, 'docs')"
     strategy:
       matrix:
         python-version: [3.8]
