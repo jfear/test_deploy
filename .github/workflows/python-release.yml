@@ -26,7 +26,6 @@ jobs:
           poetry version ${GITHUB_REF##*/}
           poetry build
           echo "::set-output name=whl_loc::$(find dist -type f -name *.whl)"
-          echo "::set-output name=whl_name::$(find dist -type f -name *.whl | xargs basename)"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -48,4 +47,4 @@ jobs:
         with:
           credentials: ${{ secrets.GCP_CREDENTIALS }}
           path: ${{ steps.poetry.outputs.whl_loc }}
-          destination: gwasqc/releases/${{ steps.poetry.outputs.whl_name }}
+          destination: gwasqc/releases
